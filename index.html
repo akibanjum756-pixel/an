@@ -3,244 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Of Emotions - Enhanced</title>
+    <title>Flower Of Emotions</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: #050505;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             overflow: hidden;
-            flex-direction: column;
         }
 
-        .container {
-            text-align: center;
-            position: relative;
+        .screen {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            padding: 20px;
         }
 
-        /* Initial Glass Card */
+        /* Ambient Glow behind elements */
+        .glow {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(230, 0, 40, 0.25) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 1. INITIAL CARD */
         .card {
-            background: rgba(18, 18, 18, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            z-index: 2;
+            background: rgba(15, 15, 15, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 35px 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 0, 38, 0.1);
-            width: 340px;
+            border-radius: 16px;
+            padding: 30px 20px;
             text-align: center;
-            transition: all 0.5s ease;
+            width: 280px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        .card-icon {
-            font-size: 35px;
+        .card .top-icon {
+            font-size: 28px;
             margin-bottom: 15px;
-            animation: pulse 2s infinite;
         }
 
         .card h2 {
             font-size: 20px;
             font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-            color: #f1f1f1;
+            margin-bottom: 6px;
         }
 
         .card p {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 25px;
+            font-size: 10px;
+            color: #777;
             letter-spacing: 1px;
-            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: 500;
         }
 
         .btn {
-            background: linear-gradient(135deg, #e60026, #b3001e);
-            color: white;
+            background: #e60026;
+            color: #fff;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 11px;
-            letter-spacing: 1px;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(230, 0, 38, 0.4);
-            transition: all 0.3s ease;
+            transition: transform 0.2s, background 0.2s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(230, 0, 38, 0.6);
+        .btn:active {
+            transform: scale(0.96);
+            background: #cc0022;
         }
 
-        /* Rose Container & Animation */
-        .rose-container {
+        /* 2. ROSE ANIMATION */
+        .rose-stage {
             display: none;
+            z-index: 2;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: absolute;
+            height: 300px;
         }
 
-        .rose-flower {
+        /* Stem growing */
+        .stem {
+            width: 4px;
+            height: 0px;
+            background: #2e7d32;
+            border-radius: 2px;
+            transition: height 1.2s ease-out;
+            position: relative;
+        }
+
+        /* Leaves on stem */
+        .stem::before, .stem::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 6px;
+            background: #2e7d32;
+            border-radius: 10px 0 10px 0;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .stem::before { top: 40%; left: -10px; transform: rotate(-30deg); }
+        .stem::after { top: 60%; right: -10px; transform: rotate(30deg); }
+
+        .stem.grown::before, .stem.grown::after {
+            opacity: 1;
+        }
+
+        /* Flower blooming */
+        .flower {
             font-size: 70px;
-            opacity: 0;
             transform: scale(0);
-            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 0 15px rgba(230, 0, 38, 0.6));
-        }
-
-        /* Floating Petal Effect */
-        .petal {
-            position: absolute;
-            background: #ff1a40;
-            width: 10px;
-            height: 10px;
-            border-radius: 50% 0 50% 50%;
             opacity: 0;
-            animation: floatPetals 3s linear infinite;
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: -10px;
+            filter: drop-shadow(0 0 12px rgba(230, 0, 40, 0.6));
         }
 
-        /* Final Letter Box */
-        .message-box {
+        .flower.bloom {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Caption under flower */
+        .bloom-caption {
+            opacity: 0;
+            margin-top: 25px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #aaa;
+            text-align: center;
+            transition: opacity 0.8s;
+        }
+
+        /* 3. LETTER / MESSAGE BOX */
+        .letter-box {
             display: none;
-            background: rgba(15, 15, 15, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 30px;
+            z-index: 2;
+            background: rgba(12, 12, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
-            width: 360px;
-            text-align: left;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-            animation: fadeInScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            position: absolute;
+            padding: 24px;
+            width: 310px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
         }
 
-        .message-box h3 {
-            color: #ff3355;
-            margin-bottom: 12px;
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .letter-box h3 {
             font-size: 18px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            color: #ffffff;
+            font-style: italic;
         }
 
-        .message-box p {
-            font-size: 13px;
-            line-height: 1.7;
-            color: #d0d0d0;
-            margin-bottom: 12px;
+        .typed-content {
+            font-size: 11.5px;
+            line-height: 1.6;
+            color: #cccccc;
+            min-height: 180px;
+            white-space: pre-line;
         }
 
-        .message-box .footer-text {
-            margin-top: 18px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 13px;
-            color: #ff3355;
-            letter-spacing: 0.5px;
+        /* Cursor blinking */
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 12px;
+            background: #e60026;
+            margin-left: 2px;
+            animation: blink 0.7s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes floatPetals {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+        @keyframes blink {
+            50% { opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="mainContainer">
-        <!-- Initial Card -->
+    <div class="screen">
+        <div class="glow"></div>
+
+        <!-- Step 1: Initial Card -->
         <div class="card" id="startCard">
-            <div class="card-icon">🌹</div>
+            <div class="top-icon">🌹</div>
             <h2>Loading Love</h2>
             <p>READY TO BLOOM FOR LOVE ❤️</p>
-            <button class="btn" onclick="startAnimation()">TAP TO BLOOM FOR LOVE ❤️</button>
+            <button class="btn" onclick="bloomProcess()">TAP TO BLOOM FOR LOVE ❤️</button>
         </div>
 
-        <!-- Rose Growing State -->
-        <div class="rose-container" id="roseContainer">
-            <div class="rose-flower" id="roseFlower">🌹</div>
+        <!-- Step 2: Rose Growing Stage -->
+        <div class="rose-stage" id="roseStage">
+            <div class="flower" id="roseFlower">🌹</div>
+            <div class="stem" id="roseStem"></div>
+            <div class="bloom-caption" id="bloomCaption">
+                EVERY PETAL BLOOMS WITH LOVE<br>
+                <span style="color:#fff; font-weight:bold;">for love ❤️</span>
+            </div>
         </div>
 
-        <!-- Final Letter Box -->
-        <div class="message-box" id="messageBox">
+        <!-- Step 3: Letter Box with Typing Animation -->
+        <div class="letter-box" id="letterBox">
+            <span class="close-btn">✖</span>
             <h3>Dear Love</h3>
-            <p>Every single line of this code was written with you in my heart. Just like this digital rose, my love for you blooms uniquely, growing stronger and more beautiful with every passing moment.</p>
-            <p>You are the brightness in my thoughts, the rhythm in my heart, and the warmth in my life. This rose is a small reflection of my feelings—timeless, true, and forever yours.</p>
-            <div class="footer-text">Yours forever ❤️</div>
+            <div class="typed-content"><span id="typewriterText"></span><span class="cursor" id="cursor"></span></div>
         </div>
     </div>
 
     <script>
-        function startAnimation() {
-            // Smoothly hide start card
-            const startCard = document.getElementById('startCard');
-            startCard.style.opacity = '0';
-            startCard.style.transform = 'scale(0.9)';
+        // Video text exact replica
+        const fullMessage = "Every single line of this code was written with you in my heart. Just like this digital rose, my love for you blooms uniquely, growing stronger and more beautiful with every passing moment.\n\nYou are the brightness in my thoughts, the rhythm in my heart, and the warmth in my life. This rose is a small reflection of my feelings—timeless, true, and forever yours.\n\nYours forever ❤️";
+
+        function bloomProcess() {
+            // 1. Hide start card
+            document.getElementById('startCard').style.display = 'none';
+
+            // 2. Show rose stage
+            const roseStage = document.getElementById('roseStage');
+            const stem = document.getElementById('roseStem');
+            const flower = document.getElementById('roseFlower');
+            const caption = document.getElementById('bloomCaption');
             
+            roseStage.style.display = 'flex';
+
+            // Grow stem first
             setTimeout(() => {
-                startCard.style.display = 'none';
-                
-                // Show rose container
-                const roseContainer = document.getElementById('roseContainer');
-                roseContainer.style.display = 'flex';
+                stem.style.height = '90px';
+                stem.classList.add('grown');
+            }, 100);
 
-                // Bloom Rose
-                setTimeout(() => {
-                    const roseFlower = document.getElementById('roseFlower');
-                    roseFlower.style.opacity = '1';
-                    roseFlower.style.transform = 'scale(1)';
-                    createPetals();
-                }, 200);
+            // Bloom flower
+            setTimeout(() => {
+                flower.classList.add('bloom');
+            }, 1000);
 
-                // Transition to Final Letter Box after 3.5 seconds
-                setTimeout(() => {
-                    roseContainer.style.opacity = '0';
-                    setTimeout(() => {
-                        roseContainer.style.display = 'none';
-                        document.getElementById('messageBox').style.display = 'block';
-                    }, 500);
-                }, 3500);
+            // Show caption below
+            setTimeout(() => {
+                caption.style.opacity = '1';
+            }, 1800);
 
-            }, 400);
+            // 3. Hide rose stage & start Letter Typing
+            setTimeout(() => {
+                roseStage.style.display = 'none';
+                startLetterTyping();
+            }, 4200);
         }
 
-        function createPetals() {
-            const container = document.getElementById('roseContainer');
-            for (let i = 0; i < 6; i++) {
-                const petal = document.createElement('div');
-                petal.classList.add('petal');
-                petal.style.left = (Math.random() * 60 - 30) + 'px';
-                petal.style.animationDuration = (2 + Math.random() * 1.5) + 's';
-                petal.style.animationDelay = (Math.random() * 0.5) + 's';
-                container.appendChild(petal);
+        function startLetterTyping() {
+            const letterBox = document.getElementById('letterBox');
+            const textElement = document.getElementById('typewriterText');
+            letterBox.style.display = 'block';
+
+            let index = 0;
+            function typeNextChar() {
+                if (index < fullMessage.length) {
+                    textElement.innerText += fullMessage.charAt(index);
+                    index++;
+                    setTimeout(typeNextChar, 35); // Typing speed
+                }
             }
+            typeNextChar();
         }
     </script>
 
