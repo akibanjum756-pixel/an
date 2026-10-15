@@ -1,301 +1,624 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Of Emotions</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080308">
+<title>For Someone Special 🌹</title>
 
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-        .screen {
-            width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            padding: 20px;
-        }
+<style>
+:root {
+  --bg: #080308;
+  --pink: #ff607f;
+  --rose: #e81745;
+  --muted: #b6a0ad;
+  --gold: #e9c7a0;
+}
 
-        /* Ambient Glow behind elements */
-        .glow {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(230, 0, 40, 0.25) 0%, rgba(0,0,0,0) 70%);
-            z-index: 1;
-            pointer-events: none;
-        }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* 1. INITIAL CARD */
-        .card {
-            z-index: 2;
-            background: rgba(15, 15, 15, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 30px 20px;
-            text-align: center;
-            width: 280px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% 38%, #310b1b 0%, transparent 43%),
+    radial-gradient(ellipse at 15% 85%, #170718 0%, transparent 45%),
+    var(--bg);
+  color: #fff4f7;
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
+}
 
-        .card .top-icon {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .14;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+}
 
-        .card h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
+#particles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
 
-        .card p {
-            font-size: 10px;
-            color: #777;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
+.app {
+  min-height: 100svh;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 28px 20px;
+}
 
-        .btn {
-            background: #e60026;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s, background 0.2s;
-        }
+.screen {
+  width: min(100%, 440px);
+  text-align: center;
+  animation: appear 1s cubic-bezier(.2,.8,.2,1) both;
+}
 
-        .btn:active {
-            transform: scale(0.96);
-            background: #cc0022;
-        }
+.hidden { display: none !important; }
 
-        /* 2. ROSE ANIMATION */
-        .rose-stage {
-            display: none;
-            z-index: 2;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 300px;
-        }
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
 
-        /* Stem growing */
-        .stem {
-            width: 4px;
-            height: 0px;
-            background: #2e7d32;
-            border-radius: 2px;
-            transition: height 1.2s ease-out;
-            position: relative;
-        }
+h1, h2 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
+}
 
-        /* Leaves on stem */
-        .stem::before, .stem::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 6px;
-            background: #2e7d32;
-            border-radius: 10px 0 10px 0;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        .stem::before { top: 40%; left: -10px; transform: rotate(-30deg); }
-        .stem::after { top: 60%; right: -10px; transform: rotate(30deg); }
+h1 {
+  font-size: clamp(40px, 11vw, 57px);
+  line-height: 1.04;
+  letter-spacing: -.8px;
+}
 
-        .stem.grown::before, .stem.grown::after {
-            opacity: 1;
-        }
+h1 em { color: var(--pink); font-weight: 400; }
 
-        /* Flower blooming */
-        .flower {
-            font-size: 70px;
-            transform: scale(0);
-            opacity: 0;
-            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-bottom: -10px;
-            filter: drop-shadow(0 0 12px rgba(230, 0, 40, 0.6));
-        }
+.subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2;
+  letter-spacing: .7px;
+  margin: 17px auto 0;
+}
 
-        .flower.bloom {
-            transform: scale(1);
-            opacity: 1;
-        }
+.glass {
+  background: linear-gradient(145deg, #ffffff0b, #ffffff03);
+  border: 1px solid #ffffff14;
+  border-radius: 22px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px #0006, inset 0 1px #ffffff09;
+}
 
-        /* Caption under flower */
-        .bloom-caption {
-            opacity: 0;
-            margin-top: 25px;
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: #aaa;
-            text-align: center;
-            transition: opacity 0.8s;
-        }
+.loader-card { padding: 32px 25px; margin-top: 35px; }
 
-        /* 3. LETTER / MESSAGE BOX */
-        .letter-box {
-            display: none;
-            z-index: 2;
-            background: rgba(12, 12, 12, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            padding: 24px;
-            width: 310px;
-            position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
-        }
+.mini-heart {
+  color: var(--pink);
+  font-size: 27px;
+  margin-bottom: 18px;
+  filter: drop-shadow(0 0 13px #ff315b);
+  animation: pulse 1.8s ease-in-out infinite;
+}
 
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: #555;
-            font-size: 14px;
-        }
+.loader-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 25px;
+  font-style: italic;
+}
 
-        .letter-box h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            color: #ffffff;
-            font-style: italic;
-        }
+.progress-track {
+  height: 2px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #ffffff13;
+  margin: 25px 0 15px;
+}
 
-        .typed-content {
-            font-size: 11.5px;
-            line-height: 1.6;
-            color: #cccccc;
-            min-height: 180px;
-            white-space: pre-line;
-        }
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #9f1637, #ff8a9f, var(--gold));
+  box-shadow: 0 0 15px var(--pink);
+}
 
-        /* Cursor blinking */
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 12px;
-            background: #e60026;
-            margin-left: 2px;
-            animation: blink 0.7s infinite;
-        }
+.progress-fill.loading { animation: loading 2.6s ease forwards; }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-    </style>
+.status {
+  font-size: 10px;
+  color: #b99ca9;
+  letter-spacing: 1px;
+}
+
+.btn {
+  position: relative;
+  border: 1px solid #ff81965a;
+  background: linear-gradient(110deg, #a50e35, #ec315a, #a50e35);
+  background-size: 200% 100%;
+  color: white;
+  border-radius: 50px;
+  padding: 15px 24px;
+  margin-top: 27px;
+  min-width: 215px;
+  font: 500 10px Inter, sans-serif;
+  letter-spacing: 2px;
+  cursor: pointer;
+  box-shadow: 0 8px 30px #d9144530;
+  transition: transform .25s, box-shadow .25s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 38px #ed174b50;
+}
+
+.btn:active { transform: scale(.97); }
+.btn:focus-visible { outline: 2px solid white; outline-offset: 5px; }
+
+.footer {
+  color: #8e7483;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  margin-top: 28px;
+}
+
+/* Cinematic rose */
+
+.rose-stage {
+  position: relative;
+  height: 345px;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  margin: 8px auto 0;
+  isolation: isolate;
+}
+
+.rose-stage::before {
+  content: "";
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: #e7134015;
+  filter: blur(35px);
+  animation: aura 4s ease-in-out infinite;
+}
+
+.rose-svg {
+  width: 225px;
+  max-width: 80%;
+  overflow: visible;
+  filter: drop-shadow(0 0 16px #e91a4930);
+}
+
+.rose-drawing {
+  transform-origin: 50% 100%;
+  animation: roseSway 5s ease-in-out infinite;
+}
+
+.rose-head {
+  transform-origin: 150px 118px;
+  transform: scale(.1);
+  opacity: 0;
+  transition: transform 1.8s cubic-bezier(.2,.8,.2,1),
+              opacity 1s ease;
+}
+
+.rose-head.open {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.rose-petal {
+  stroke: #ff8195;
+  stroke-width: .65;
+}
+
+.rose-stage .spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffd9e0;
+  box-shadow: 0 0 12px #ff617f;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+.rose-stage .s1 { top: 18%; left: 22%; }
+.rose-stage .s2 { top: 37%; right: 16%; animation-delay: .7s; }
+.rose-stage .s3 { bottom: 23%; left: 15%; animation-delay: 1.4s; }
+.rose-stage .s4 { bottom: 30%; right: 20%; animation-delay: 2s; }
+
+.rose-caption {
+  color: var(--muted);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 23px;
+  font-style: italic;
+  margin-top: -8px;
+}
+
+.rose-caption span { color: var(--pink); }
+
+/* Letter */
+
+.letter {
+  padding: clamp(24px, 7vw, 36px);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter::after {
+  content: "♡";
+  position: absolute;
+  right: 10px;
+  top: -38px;
+  font-size: 130px;
+  color: #ff69800b;
+  pointer-events: none;
+}
+
+.letter-top {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.letter h2 {
+  color: #ff9aac;
+  font-size: 36px;
+  line-height: 1.1;
+  margin-bottom: 22px;
+}
+
+.letter p {
+  color: #d0bdc7;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.letter .signature {
+  text-align: right;
+  font-style: italic;
+  color: var(--pink);
+  font-size: 23px;
+  margin-top: 23px;
+  margin-bottom: 0;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 25px;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(17px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+}
+
+@keyframes loading {
+  to { width: 100%; }
+}
+
+@keyframes roseSway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+
+@keyframes aura {
+  0%, 100% { transform: scale(.85); opacity: .5; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: .15; transform: scale(.6); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+@media (max-width: 380px) {
+  .loader-card { padding: 27px 18px; }
+  .rose-stage { height: 300px; }
+  .letter p { font-size: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
 </head>
+
 <body>
+<canvas id="particles" aria-hidden="true"></canvas>
 
-    <div class="screen">
-        <div class="glow"></div>
+<main class="app">
 
-        <!-- Step 1: Initial Card -->
-        <div class="card" id="startCard">
-            <div class="top-icon">🌹</div>
-            <h2>Loading Love</h2>
-            <p>READY TO BLOOM FOR LOVE ❤️</p>
-            <button class="btn" onclick="bloomProcess()">TAP TO BLOOM FOR LOVE ❤️</button>
-        </div>
+  <section id="welcome" class="screen">
+    <div class="eyebrow">A little piece of my heart</div>
+    <h1>For Someone<br><em>Special.</em></h1>
+    <p class="subtitle">
+      Not everything beautiful needs a reason.<br>
+      Sometimes, it just needs someone.
+    </p>
 
-        <!-- Step 2: Rose Growing Stage -->
-        <div class="rose-stage" id="roseStage">
-            <div class="flower" id="roseFlower">🌹</div>
-            <div class="stem" id="roseStem"></div>
-            <div class="bloom-caption" id="bloomCaption">
-                EVERY PETAL BLOOMS WITH LOVE<br>
-                <span style="color:#fff; font-weight:bold;">for love ❤️</span>
-            </div>
-        </div>
-
-        <!-- Step 3: Letter Box with Typing Animation -->
-        <div class="letter-box" id="letterBox">
-            <span class="close-btn">✖</span>
-            <h3>Dear Love</h3>
-            <div class="typed-content"><span id="typewriterText"></span><span class="cursor" id="cursor"></span></div>
-        </div>
+    <div class="glass loader-card">
+      <div class="mini-heart">♥</div>
+      <div class="loader-title">Something beautiful awaits...</div>
+      <div class="progress-track">
+        <div id="bar" class="progress-fill"></div>
+      </div>
+      <div id="status" class="status">A LITTLE SURPRISE, JUST FOR YOU</div>
+      <button id="start" class="btn">DISCOVER YOUR SURPRISE ↗</button>
     </div>
 
-    <script>
-        // Video text exact replica
-        const fullMessage = "Every single line of this code was written with you in my heart. Just like this digital rose, my love for you blooms uniquely, growing stronger and more beautiful with every passing moment.\n\nYou are the brightness in my thoughts, the rhythm in my heart, and the warmth in my life. This rose is a small reflection of my feelings—timeless, true, and forever yours.\n\nYours forever ❤️";
+    <div class="footer">MADE WITH A LITTLE EXTRA LOVE · ♥</div>
+  </section>
 
-        function bloomProcess() {
-            // 1. Hide start card
-            document.getElementById('startCard').style.display = 'none';
+  <section id="flower-screen" class="screen hidden">
+    <div class="eyebrow">A flower, just for you</div>
+    <h1>Let love <em>bloom.</em></h1>
 
-            // 2. Show rose stage
-            const roseStage = document.getElementById('roseStage');
-            const stem = document.getElementById('roseStem');
-            const flower = document.getElementById('roseFlower');
-            const caption = document.getElementById('bloomCaption');
-            
-            roseStage.style.display = 'flex';
+    <div class="rose-stage">
+      <span class="spark s1"></span>
+      <span class="spark s2"></span>
+      <span class="spark s3"></span>
+      <span class="spark s4"></span>
 
-            // Grow stem first
-            setTimeout(() => {
-                stem.style.height = '90px';
-                stem.classList.add('grown');
-            }, 100);
+      <svg class="rose-svg" viewBox="0 0 300 350"
+           xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="An illustrated red rose">
+        <defs>
+          <linearGradient id="stem" x1="0" y1="0" x2="1" y2="0">
+            <stop stop-color="#164725"/>
+            <stop offset=".5" stop-color="#53b66b"/>
+            <stop offset="1" stop-color="#173b21"/>
+          </linearGradient>
+          <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#65c978"/>
+            <stop offset="1" stop-color="#14512a"/>
+          </linearGradient>
+          <radialGradient id="red" cx=".35" cy=".22" r=".85">
+            <stop stop-color="#ff8b9e"/>
+            <stop offset=".4" stop-color="#f52c57"/>
+            <stop offset="1" stop-color="#71051f"/>
+          </radialGradient>
+          <radialGradient id="inner" cx=".3" cy=".2" r=".8">
+            <stop stop-color="#ffb1bf"/>
+            <stop offset=".45" stop-color="#f82b55"/>
+            <stop offset="1" stop-color="#9e092d"/>
+          </radialGradient>
+          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
 
-            // Bloom flower
-            setTimeout(() => {
-                flower.classList.add('bloom');
-            }, 1000);
+        <g class="rose-drawing">
+          <path d="M151 133 C151 193 146 254 151 326"
+                fill="none" stroke="url(#stem)" stroke-width="7"
+                stroke-linecap="round"/>
+          <path d="M149 226 Q102 178 75 211 Q99 254 149 226Z"
+                fill="url(#leaf)" stroke="#4a9c59" stroke-width="1"/>
+          <path d="M143 224 L84 215" stroke="#9be6a1"
+                stroke-width="1" fill="none" opacity=".6"/>
+          <path d="M151 267 Q198 221 229 249 Q204 290 151 267Z"
+                fill="url(#leaf)" stroke="#4a9c59" stroke-width="1"/>
+          <path d="M158 268 L220 253" stroke="#9be6a1"
+                stroke-width="1" fill="none" opacity=".6"/>
 
-            // Show caption below
-            setTimeout(() => {
-                caption.style.opacity = '1';
-            }, 1800);
+          <g class="rose-head" id="bloom" filter="url(#glow)">
+            <path class="rose-petal" fill="url(#red)"
+                  d="M150 137 C102 127 96 83 119 62 C133 47 151 61 151 79 C160 43 198 47 210 76 C231 111 193 139 150 137Z"/>
+            <path class="rose-petal" fill="url(#red)"
+                  d="M151 132 C103 144 79 113 92 88 C104 67 130 79 143 99 C128 67 157 46 179 66 C199 84 185 117 151 132Z"/>
+            <path class="rose-petal" fill="url(#red)"
+                  d="M149 136 C179 147 216 122 207 94 C201 77 181 81 165 103 C177 70 153 58 137 80 C124 98 132 121 149 136Z"/>
+            <path class="rose-petal" fill="url(#inner)"
+                  d="M149 133 C119 115 126 88 145 87 C162 82 181 105 166 120 C159 129 151 127 151 117 C151 109 164 104 160 96 C153 87 142 100 149 108 C132 103 137 86 150 83 C176 77 192 108 175 128Z"/>
+            <path d="M111 108 Q116 129 140 136"
+                  fill="none" stroke="#ffb0bd" stroke-width="2"
+                  opacity=".65" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
 
-            // 3. Hide rose stage & start Letter Typing
-            setTimeout(() => {
-                roseStage.style.display = 'none';
-                startLetterTyping();
-            }, 4200);
-        }
+    <div class="rose-caption">A little beauty, <span>for you.</span></div>
+    <p class="subtitle">Some feelings are too beautiful for words.</p>
+    <button id="read-letter" class="btn">A LETTER FOR YOU ♥</button>
+  </section>
 
-        function startLetterTyping() {
-            const letterBox = document.getElementById('letterBox');
-            const textElement = document.getElementById('typewriterText');
-            letterBox.style.display = 'block';
+  <section id="letter-screen" class="screen hidden">
+    <div class="eyebrow">Words from the heart</div>
+    <div class="glass letter">
+      <div class="letter-top">✦ A LETTER FOR YOU ✦</div>
+      <h2>Dear Someone<br>Special,</h2>
+      <div class="divider"></div>
 
-            let index = 0;
-            function typeNextChar() {
-                if (index < fullMessage.length) {
-                    textElement.innerText += fullMessage.charAt(index);
-                    index++;
-                    setTimeout(typeNextChar, 35); // Typing speed
-                }
-            }
-            typeNextChar();
-        }
-    </script>
+      <p>
+        Some people come into our lives and make the ordinary
+        feel extraordinary. A little conversation, a simple
+        smile, or a small moment can become a beautiful memory.
+      </p>
 
+      <p>
+        If I could give you one thing, it would be the chance
+        to see yourself through the eyes of those who appreciate
+        you. Maybe then, you would understand just how special
+        you are.
+      </p>
+
+      <p>
+        Like a rose blooming in the quiet of the night,
+        may you always find reasons to smile, dreams to follow,
+        and kindness wherever life takes you.
+      </p>
+
+      <p class="signature">With love, always. ♡</p>
+    </div>
+
+    <button id="again" class="btn">↺ &nbsp; EXPERIENCE IT AGAIN</button>
+    <div class="footer">SOME MOMENTS DESERVE TO LAST FOREVER</div>
+  </section>
+
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+
+  const screens = [
+    $("welcome"),
+    $("flower-screen"),
+    $("letter-screen")
+  ];
+
+  const bar = $("bar");
+  const status = $("status");
+  const bloom = $("bloom");
+  const start = $("start");
+  let busy = false;
+  let timers = [];
+
+  function clearTimers() {
+    timers.forEach(clearTimeout);
+    timers = [];
+  }
+
+  function later(fn, delay) {
+    const timer = setTimeout(fn, delay);
+    timers.push(timer);
+  }
+
+  function show(screen) {
+    screens.forEach(s => s.classList.add("hidden"));
+    screen.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  start.addEventListener("click", () => {
+    if (busy) return;
+    busy = true;
+    start.disabled = true;
+
+    bar.classList.remove("loading");
+    void bar.offsetWidth;
+    bar.classList.add("loading");
+
+    start.textContent = "PREPARING YOUR SURPRISE...";
+    status.textContent = "SOMETHING BEAUTIFUL IS BLOOMING";
+
+    later(() => {
+      show($("flower-screen"));
+      requestAnimationFrame(() => bloom.classList.add("open"));
+      busy = false;
+      start.disabled = false;
+      start.textContent = "DISCOVER YOUR SURPRISE ↗";
+    }, 2700);
+  });
+
+  $("read-letter").addEventListener("click", () => {
+    show($("letter-screen"));
+  });
+
+  $("again").addEventListener("click", () => {
+    clearTimers();
+    busy = false;
+    start.disabled = false;
+    bar.classList.remove("loading");
+    bar.style.width = "0";
+    status.textContent = "A LITTLE SURPRISE, JUST FOR YOU";
+    bloom.classList.remove("open");
+    show($("welcome"));
+  });
+
+  // Lightweight ambient particles; no heavy loops.
+  const canvas = $("particles");
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  let width = 0, height = 0, particles = [];
+  let frame = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const count = reduceMotion
+      ? 0
+      : Math.min(35, Math.floor(width / 13));
+
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.5 + .4,
+      v: Math.random() * .22 + .08,
+      a: Math.random() * .5 + .15
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach(p => {
+      p.y -= p.v;
+      if (p.y < -5) {
+        p.y = height + 5;
+        p.x = Math.random() * width;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 112, 145, ${p.a})`;
+      ctx.fill();
+    });
+
+    if (!reduceMotion) frame = requestAnimationFrame(draw);
+  }
+
+  resize();
+  if (!reduceMotion) draw();
+
+  window.addEventListener("resize", resize, { passive: true });
+})();
+</script>
 </body>
 </html>
